@@ -122,17 +122,41 @@ GENCODE_SM52       := -gencode arch=compute_52,code=sm_52
 GENCODE_SM60       := -gencode arch=compute_60,code=sm_60
 GENCODE_SM61       := -gencode arch=compute_61,code=sm_61
 GENCODE_SM70       := -gencode arch=compute_70,code=sm_70
+GENCODE_SM72       := -gencode arch=compute_72,code=sm_72
+GENCODE_SM75       := -gencode arch=compute_75,code=sm_75
+GENCODE_SM80       := -gencode arch=compute_80,code=sm_80
+GENCODE_SM86       := -gencode arch=compute_86,code=sm_86
+GENCODE_SM90       := -gencode arch=compute_90,code=sm_90
 # Common to all supported CUDA versions:
-NVCCFL             += $(GENCODE_SM30) $(GENCODE_SM35) $(GENCODE_SM50) $(GENCODE_SM52)
+NVCCFL             += $(GENCODE_SM35) $(GENCODE_SM50) $(GENCODE_SM52)
 NVCCFL             += -Wno-deprecated-gpu-targets
+# Additional CC for CUDA <= 8 (SM20 obsolete after CUDA 8):
+$(if $(shell [ $(NVCC_MAJOR_NUM) -le 10 ] && echo "OK"), \
+	$(eval NVCCFL += $(GENCODE_SM20)) \
+)
+# Additional CC for CUDA <= 10 (SM30 obsolete after CUDA 10):
+$(if $(shell [ $(NVCC_MAJOR_NUM) -le 10 ] && echo "OK"), \
+	$(eval NVCCFL += $(GENCODE_SM30)) \
+)
 # Additional CC for CUDA >= 8:
 $(if $(shell [ $(NVCC_MAJOR_NUM) -ge 8 ] && echo "OK"), \
 	$(eval NVCCFL += $(GENCODE_SM60) $(GENCODE_SM61)) \
 )
-# Additional CC for CUDA >= 9 (CC2.0 is obsolete)
+# Additional CC for CUDA >= 9:
 $(if $(shell [ $(NVCC_MAJOR_NUM) -ge 9 ] && echo "OK"), \
-	$(eval NVCCFL += $(GENCODE_SM70)), \
-	$(eval NVCCFL += $(GENCODE_SM20)) \
+	$(eval NVCCFL += $(GENCODE_SM70)) \
+)
+# Additional CC for CUDA >= 10:
+$(if $(shell [ $(NVCC_MAJOR_NUM) -ge 10 ] && echo "OK"), \
+	$(eval NVCCFL += $(GENCODE_SM72) $(GENCODE_SM75)) \
+)
+# Additional CC for CUDA >= 11:
+$(if $(shell [ $(NVCC_MAJOR_NUM) -ge 11 ] && echo "OK"), \
+	$(eval NVCCFL += $(GENCODE_SM80) $(GENCODE_SM86)) \
+)
+# Additional CC for CUDA >= 12 (anticipated compatibility):
+$(if $(shell [ $(NVCC_MAJOR_NUM) -ge 12 ] && echo "OK"), \
+	$(eval NVCCFL += $(GENCODE_SM90)) \
 )
 
 # OS-specific build flags
@@ -188,5 +212,11 @@ endif
 
 sim_install_files += $(CARLSIM5_LIB_DIR)/$(lib_name)*
 
-CARLSIM5_FLG := -I$(CARLSIM5_INC_DIR) -L$(CARLSIM5_LIB_DIR) -pthread
+# Xcompiler avoids a pthread error with CUDA 11+:
+$(if $(shell [ $(NVCC_MAJOR_NUM) -ge 11 ] && echo "OK"), \
+	$(eval CARLSIM5_FLG := -I$(CARLSIM5_INC_DIR) -L$(CARLSIM5_LIB_DIR) -Xcompiler -pthread) \
+)
+$(if $(shell [ $(NVCC_MAJOR_NUM) -le 10 ] && echo "OK"), \
+	$(eval CARLSIM5_FLG := -I$(CARLSIM5_INC_DIR) -L$(CARLSIM5_LIB_DIR) -pthread) \
+)
 CARLSIM5_LIB := -l$(SIM_LIB_NAME)
