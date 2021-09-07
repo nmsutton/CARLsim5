@@ -47,20 +47,33 @@ can be found in our [User Guide](http://uci-carl.github.io/CARLsim5/ch1_getting_
    $ cd CARLsim5
    ```
 
-4. Make and install
+4. Ubuntu 20.04+ compatibility
+GCC & G++ versions 8.0 or below are needed for CARLsim compatibility and this must manually be installed on Ubuntu 20.04+. For example for version 7:
+   ```
+   $ sudo apt install gcc-7 g++7
+   ```
+Use update-alternatives to switch versions. For example for GCC, (substitute G++ for GCC when switching G++):
+   ```
+   $ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 7
+   $ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 11
+   $ sudo update-alternatives --config gcc
+   ```
+Then type selection for GCC 7. Once CARLsim is installed run update-alternatives to switch back to normal versions of GCC and G++ for other software.
+
+5. Make and install
    ```
    $ make
    $ make install
    ```
 
-5. Verify installation
+6. Verify installation
    ```
    $ cd ~
    $ ls
    ```
    You will see `CARL` folder
 
-6. Go back to `CARLsim5` folder and start your own project! The "Hello World" project is a goot starting point for this.
+7. Go back to `CARLsim5` folder and start your own project! The "Hello World" project is a goot starting point for this.
    Make sure it runs:
    ```
    $ cd CARLsim5
