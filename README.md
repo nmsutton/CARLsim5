@@ -217,3 +217,8 @@ The latest release was tested on the following platforms:
 
 The latest release has at least partial compatibility on the following platforms:
 - Ubuntu 20.04+
+  The majority but not all test cases have been found to pass with these OS distributions.
+
+## In case of a pthread error
+
+If one encounters a "nvcc fatal: Unknown option '-pthread'" error a workaround for fixing this is to change the code in carlsim/configure.mk from "-pthread" to "-Xcompiler -pthread". This is not included in the standard project code because this fix is platform dependent and may not work on all systems. See [reference](https://gitlab.kitware.com/cmake/cmake/-/issues/18008) for additional details.

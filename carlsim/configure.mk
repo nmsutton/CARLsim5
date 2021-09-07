@@ -212,13 +212,5 @@ endif
 
 sim_install_files += $(CARLSIM5_LIB_DIR)/$(lib_name)*
 
-# Xcompiler avoids a pthread error with CUDA 11+
-# This has been described as a workaround but a better solutionis not yet known. 
-# Reference: https://gitlab.kitware.com/cmake/cmake/-/issues/18008
-$(if $(shell [ $(NVCC_MAJOR_NUM) -ge 11 ] && echo "OK"), \
-	$(eval CARLSIM5_FLG := -I$(CARLSIM5_INC_DIR) -L$(CARLSIM5_LIB_DIR) -Xcompiler -pthread) \
-)
-$(if $(shell [ $(NVCC_MAJOR_NUM) -le 10 ] && echo "OK"), \
-	$(eval CARLSIM5_FLG := -I$(CARLSIM5_INC_DIR) -L$(CARLSIM5_LIB_DIR) -pthread) \
-)
+CARLSIM5_FLG := -I$(CARLSIM5_INC_DIR) -L$(CARLSIM5_LIB_DIR) -pthread
 CARLSIM5_LIB := -l$(SIM_LIB_NAME)
