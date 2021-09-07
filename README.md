@@ -214,3 +214,6 @@ will continue to focus on the GPU implementation.
 The latest release was tested on the following platforms:
 - Ubuntu 16.04
 - Mac OS X 10.11 (El Capitan)
+
+The latest release has at least partial compatibility on the following platforms:
+- Ubuntu 20.04+
