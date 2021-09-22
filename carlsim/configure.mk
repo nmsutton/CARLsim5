@@ -131,7 +131,7 @@ GENCODE_SM90       := -gencode arch=compute_90,code=sm_90
 NVCCFL             += $(GENCODE_SM35) $(GENCODE_SM50) $(GENCODE_SM52)
 NVCCFL             += -Wno-deprecated-gpu-targets
 # Additional CC for CUDA <= 8 (SM20 obsolete after CUDA 8):
-$(if $(shell [ $(NVCC_MAJOR_NUM) -le 10 ] && echo "OK"), \
+$(if $(shell [ $(NVCC_MAJOR_NUM) -le 9 ] && echo "OK"), \
 	$(eval NVCCFL += $(GENCODE_SM20)) \
 )
 # Additional CC for CUDA <= 10 (SM30 obsolete after CUDA 10):
